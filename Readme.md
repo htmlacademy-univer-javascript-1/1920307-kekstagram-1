@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Анастасия Демина](https://up.htmlacademy.ru/univer-js1/1/user/1920307).
-* Наставник: `Павел Нюкало`.
+* Наставник: `Павел Нюкало`(https://htmlacademy.ru/profile/nyukalopavel).
 
 ---
 
