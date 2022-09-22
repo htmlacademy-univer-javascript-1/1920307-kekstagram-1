@@ -10,3 +10,6 @@ function getRandomIntNumber(min, max) {
 function checkLength(string, maxLenght) {
   return string.length <= maxLenght;
 }
+
+getRandomIntNumber();
+checkLength();
