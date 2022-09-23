@@ -11,5 +11,5 @@ function checkLength(string, maxLenght) {
   return string.length <= maxLenght;
 }
 
-getRandomIntNumber();
-checkLength();
+getRandomIntNumber(10, 50);
+checkLength('abcd', 5);
