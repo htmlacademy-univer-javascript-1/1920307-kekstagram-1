@@ -95,7 +95,7 @@ function createPicture (index) {
 }
 
 const pictures = Array.from({length: PICTURES_NUMBER}, ( cur, i ) => createPicture(i));
-console.log(pictures);
+
 // вызовы-"заглушки"
 checkLength();
 pictures();
