@@ -40,6 +40,11 @@ const DESCRIPTION_OPTIONS = [
 
 const PICTURES_NUMBER = 25;
 const MAX_COMMENT_ID = 1000;
+const MIN_COMMENT_COUNT = 2;
+const MAX_COMMENT_COUNT = 5;
+const MIN_LIKES_COUNT = 15;
+const MAX_LIKES_COUNT = 200;
+const AVATAR_COUNT = 6;
 
 function getRandomIntNumber (min, max) {
   if (min > max) {
@@ -72,25 +77,25 @@ function generateCommentId() {
 function createComment () {
   return {
     id: generateCommentId(),
-    avatar: `img/avatar${getRandomIntNumber(1, 6)}.svg`,
+    avatar: `img/avatar${getRandomIntNumber(1, AVATAR_COUNT)}.svg`,
     message: getRandomArrayElement(COMMENT_OPTIONS),
     name: getRandomArrayElement(NAME_OPTIONS)
   };
 }
 
 function createPicture (index) {
-  const commentsCount = getRandomIntNumber(2, 5);
+  const commentsCount = getRandomIntNumber(MIN_COMMENT_COUNT, MAX_COMMENT_COUNT);
   return {
     id: index + 1,
     url: `photos/${index + 1}.jpg`,
     description: getRandomArrayElement(DESCRIPTION_OPTIONS),
-    likes: getRandomIntNumber(15, 200),
+    likes: getRandomIntNumber(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
     comments: Array.from({length: commentsCount}, createComment)
   };
 }
 
 const pictures = Array.from({length: PICTURES_NUMBER}, ( cur, i ) => createPicture(i));
-
+console.log(pictures);
 // вызовы-"заглушки"
 checkLength();
 pictures();
