@@ -50,7 +50,7 @@ const AVATAR_COUNT = 6;
 
 const commentsId = [];
 
-function generateCommentId() {
+function generateCommentId () {
   let newId = 0;
   do {
     newId = getRandomIntNumber(1, MAX_COMMENT_ID);
