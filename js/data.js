@@ -62,7 +62,7 @@ function generateCommentId () {
 function createComment () {
   return {
     id: generateCommentId(),
-    avatar: `img/avatar${getRandomIntNumber(1, AVATAR_COUNT)}.svg`,
+    avatar: `img/avatar-${getRandomIntNumber(1, AVATAR_COUNT)}.svg`,
     message: getRandomArrayElement(COMMENT_OPTIONS),
     name: getRandomArrayElement(NAME_OPTIONS)
   };
