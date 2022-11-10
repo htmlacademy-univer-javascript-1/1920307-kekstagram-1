@@ -1,15 +1,17 @@
 const bigPicture = document.querySelector('.big-picture');
 const commentSample = document.querySelector('.social__comment');
+const closeButton = document.querySelector('.big-picture__cancel');
+
+const commentsCountInfo = bigPicture.querySelector('.social__comment-count');
+const commentsLoader = bigPicture.querySelector('.comments-loader');
 
 function addBigPhotoClickHandler (photo, pictureInfo) {
   photo.addEventListener('click', () => {
     const img = bigPicture.querySelector('.big-picture__img').querySelector('img');
     const likes = bigPicture.querySelector('.likes-count');
-    const commentsCountInfo = bigPicture.querySelector('.social__comment-count');
     const commentsCount = bigPicture.querySelector('.comments-count');
     const comments = bigPicture.querySelector('.social__comments');
     const description = bigPicture.querySelector('.social__caption');
-    const commentsLoader = bigPicture.querySelector('.comments-loader');
 
     img.src = pictureInfo.url;
     likes.textContent = pictureInfo.likes;
@@ -17,9 +19,9 @@ function addBigPhotoClickHandler (photo, pictureInfo) {
     description.textContent = pictureInfo.description;
     addComments(comments, pictureInfo.comments);
 
-    showFullVersion(commentsCountInfo, commentsLoader);
-    addClosingClickHandler(commentsCountInfo, commentsLoader);
+    toggleDisplayFullVersion();
   });
+  addClosingClickHandler();
 }
 
 function addComments (container, commentsInfo) {
@@ -32,30 +34,22 @@ function addComments (container, commentsInfo) {
   });
 }
 
-function addClosingClickHandler (commentsCountInfo, commentsLoader) {
-  const button = document.querySelector('.big-picture__cancel');
-  button.addEventListener('click', () => {
-    closeFullVersion(commentsCountInfo, commentsLoader);
-  });
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      closeFullVersion(commentsCountInfo, commentsLoader);
-    }
-  });
+function addClosingClickHandler () {
+  closeButton.addEventListener('click', toggleDisplayFullVersion);
+  document.addEventListener('keydown', EscapeCloseFullVersion);
 }
 
-function closeFullVersion (commentsCountInfo, commentsLoader) {
-  bigPicture.classList.add('hidden');
-  commentsCountInfo.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
-  document.querySelector('body').classList.remove('modal-open');
+function EscapeCloseFullVersion (evt) {
+  if (evt.key === 'Escape') {
+    toggleDisplayFullVersion();
+  }
 }
 
-function showFullVersion (commentsCountInfo, commentsLoader) {
-  bigPicture.classList.remove('hidden');
-  commentsCountInfo.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
-  document.querySelector('body').classList.add('modal-open');
+function toggleDisplayFullVersion () {
+  bigPicture.classList.toggle('hidden');
+  commentsCountInfo.classList.toggle('hidden');
+  commentsLoader.classList.toggle('hidden');
+  document.querySelector('body').classList.toggle('modal-open');
 }
 
 export {addBigPhotoClickHandler};
