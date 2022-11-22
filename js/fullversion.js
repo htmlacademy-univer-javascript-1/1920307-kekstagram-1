@@ -1,27 +1,35 @@
+import {pictures} from './data.js';
+
 const bigPicture = document.querySelector('.big-picture');
 const commentSample = document.querySelector('.social__comment');
 const closeButton = document.querySelector('.big-picture__cancel');
-
 const commentsCountInfo = bigPicture.querySelector('.social__comment-count');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
+const containerPhotos = document.querySelector('.pictures');
 
-function addBigPhotoClickHandler (photo, pictureInfo) {
-  photo.addEventListener('click', () => {
-    const img = bigPicture.querySelector('.big-picture__img').querySelector('img');
-    const likes = bigPicture.querySelector('.likes-count');
-    const commentsCount = bigPicture.querySelector('.comments-count');
-    const comments = bigPicture.querySelector('.social__comments');
-    const description = bigPicture.querySelector('.social__caption');
+function addFullPhotoClickHandler () {
+  containerPhotos.addEventListener('click', showFullVersion);
+}
 
-    img.src = pictureInfo.url;
-    likes.textContent = pictureInfo.likes;
-    commentsCount.textContent = pictureInfo.comments.length;
-    description.textContent = pictureInfo.description;
-    addComments(comments, pictureInfo.comments);
+function showFullVersion (evt) {
+  const img = bigPicture.querySelector('.big-picture__img').querySelector('img');
+  const likes = bigPicture.querySelector('.likes-count');
+  const commentsCount = bigPicture.querySelector('.comments-count');
+  const comments = bigPicture.querySelector('.social__comments');
+  const description = bigPicture.querySelector('.social__caption');
+
+  if (evt.target.closest('.picture')) {
+    const id = evt.target.parentNode.id;
+    img.src = pictures[id].url;
+    likes.textContent = pictures[id].likes;
+    commentsCount.textContent = pictures[id].comments.length;
+    description.textContent = pictures[id].description;
+    addComments(comments, pictures[id].comments);
 
     toggleDisplayFullVersion();
-  });
-  addClosingClickHandler();
+    addClosingClickHandler();
+    containerPhotos.removeEventListener('click', showFullVersion);
+  }
 }
 
 function addComments (container, commentsInfo) {
@@ -35,14 +43,22 @@ function addComments (container, commentsInfo) {
 }
 
 function addClosingClickHandler () {
-  closeButton.addEventListener('click', toggleDisplayFullVersion);
-  document.addEventListener('keydown', EscapeCloseFullVersion);
+  closeButton.addEventListener('click', clickCloseFullVersion);
+  document.addEventListener('keydown', escapeCloseFullVersion);
 }
 
-function EscapeCloseFullVersion (evt) {
+function escapeCloseFullVersion (evt) {
   if (evt.key === 'Escape') {
     toggleDisplayFullVersion();
   }
+  this.removeEventListener('keydown', escapeCloseFullVersion);
+  containerPhotos.addEventListener('click', showFullVersion);
+}
+
+function clickCloseFullVersion () {
+  toggleDisplayFullVersion();
+  this.removeEventListener('click', clickCloseFullVersion);
+  containerPhotos.addEventListener('click', showFullVersion);
 }
 
 function toggleDisplayFullVersion () {
@@ -52,4 +68,4 @@ function toggleDisplayFullVersion () {
   document.querySelector('body').classList.toggle('modal-open');
 }
 
-export {addBigPhotoClickHandler};
+export {addFullPhotoClickHandler};
