@@ -1,25 +1,39 @@
+import {pictures} from './data.js';
+
 const bigPicture = document.querySelector('.big-picture');
 const commentSample = document.querySelector('.social__comment');
+const closeButton = document.querySelector('.big-picture__cancel');
+const commentsCountInfo = bigPicture.querySelector('.social__comment-count');
+const commentsLoader = bigPicture.querySelector('.comments-loader');
+const containerPhotos = document.querySelector('.pictures');
 
-function addBigPhotoClickHandler (photo, pictureInfo) {
-  photo.addEventListener('click', () => {
-    const img = bigPicture.querySelector('.big-picture__img').querySelector('img');
-    const likes = bigPicture.querySelector('.likes-count');
-    const commentsCountInfo = bigPicture.querySelector('.social__comment-count');
-    const commentsCount = bigPicture.querySelector('.comments-count');
-    const comments = bigPicture.querySelector('.social__comments');
-    const description = bigPicture.querySelector('.social__caption');
-    const commentsLoader = bigPicture.querySelector('.comments-loader');
+function addFullPhotoClickHandler () {
+  containerPhotos.addEventListener('click', showFullVersion);
+}
 
-    img.src = pictureInfo.url;
-    likes.textContent = pictureInfo.likes;
-    commentsCount.textContent = pictureInfo.comments.length;
-    description.textContent = pictureInfo.description;
-    addComments(comments, pictureInfo.comments);
+function removeFullPhotoClickHandler () {
+  containerPhotos.removeEventListener('click', showFullVersion);
+}
 
-    showFullVersion(commentsCountInfo, commentsLoader);
-    addClosingClickHandler(commentsCountInfo, commentsLoader);
-  });
+function showFullVersion (evt) {
+  const img = bigPicture.querySelector('.big-picture__img').querySelector('img');
+  const likes = bigPicture.querySelector('.likes-count');
+  const commentsCount = bigPicture.querySelector('.comments-count');
+  const comments = bigPicture.querySelector('.social__comments');
+  const description = bigPicture.querySelector('.social__caption');
+
+  if (evt.target.closest('.picture')) {
+    const id = evt.target.parentNode.id;
+    img.src = pictures[id].url;
+    likes.textContent = pictures[id].likes;
+    commentsCount.textContent = pictures[id].comments.length;
+    description.textContent = pictures[id].description;
+    addComments(comments, pictures[id].comments);
+
+    toggleDisplayFullVersion();
+    addClosingHandlers();
+    containerPhotos.removeEventListener('click', showFullVersion);
+  }
 }
 
 function addComments (container, commentsInfo) {
@@ -32,30 +46,33 @@ function addComments (container, commentsInfo) {
   });
 }
 
-function addClosingClickHandler (commentsCountInfo, commentsLoader) {
-  const button = document.querySelector('.big-picture__cancel');
-  button.addEventListener('click', () => {
-    closeFullVersion(commentsCountInfo, commentsLoader);
-  });
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      closeFullVersion(commentsCountInfo, commentsLoader);
-    }
-  });
+function addClosingHandlers () {
+  closeButton.addEventListener('click', closeFullVersion);
+  document.addEventListener('keydown', escapeCloseFullVersion);
 }
 
-function closeFullVersion (commentsCountInfo, commentsLoader) {
-  bigPicture.classList.add('hidden');
-  commentsCountInfo.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
-  document.querySelector('body').classList.remove('modal-open');
+function removeClosingHandlers () {
+  closeButton.removeEventListener('click', closeFullVersion);
+  document.removeEventListener('keydown', escapeCloseFullVersion);
 }
 
-function showFullVersion (commentsCountInfo, commentsLoader) {
-  bigPicture.classList.remove('hidden');
-  commentsCountInfo.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
-  document.querySelector('body').classList.add('modal-open');
+function escapeCloseFullVersion (evt) {
+  if (evt.key === 'Escape') {
+    closeFullVersion();
+  }
 }
 
-export {addBigPhotoClickHandler};
+function closeFullVersion () {
+  toggleDisplayFullVersion();
+  removeClosingHandlers();
+  addFullPhotoClickHandler();
+}
+
+function toggleDisplayFullVersion () {
+  bigPicture.classList.toggle('hidden');
+  commentsCountInfo.classList.toggle('hidden');
+  commentsLoader.classList.toggle('hidden');
+  document.querySelector('body').classList.toggle('modal-open');
+}
+
+export {addFullPhotoClickHandler, removeFullPhotoClickHandler};
