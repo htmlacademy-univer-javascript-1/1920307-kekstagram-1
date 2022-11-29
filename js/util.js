@@ -7,13 +7,17 @@ function getRandomIntNumber (min, max) {
   return Math.floor(Math.random() * (max + 1 - min)) + min;
 }
 
-function checkLength (string, maxLenght) {
-  return string.length <= maxLenght;
-}
-
 function getRandomArrayElement (elements) {
   return elements[getRandomIntNumber(0, elements.length - 1)];
 }
 
-export {getRandomIntNumber, getRandomArrayElement, checkLength};
+function checkLength (array, maxLenght) {
+  return array.length <= maxLenght;
+}
+
+function checkElementUniqueness (array) {
+  return new Set(array).size === array.length;
+}
+
+export {getRandomIntNumber, getRandomArrayElement, checkLength, checkElementUniqueness};
 
