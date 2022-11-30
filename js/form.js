@@ -1,5 +1,7 @@
 import {getFormValidator} from './form-validate.js';
 import {addFullPhotoClickHandler, removeFullPhotoClickHandler} from './fullversion.js';
+import {addScaleControlHandlers, setDefaultScaleValue} from './image-zoom.js';
+import {addPictureEffectsControl, removePictureEffectsControl} from './image-effects.js';
 
 const body = document.querySelector('body');
 const form = body.querySelector('.img-upload__form');
@@ -56,6 +58,8 @@ function closeForm () {
   uploadFile.addEventListener('change', showForm);
   form.removeEventListener('submit', stopSubmit);
   addFullPhotoClickHandler();
+  setDefaultScaleValue();
+  removePictureEffectsControl();
 }
 
 function showForm () {
@@ -63,7 +67,10 @@ function showForm () {
   uploadFile.removeEventListener('change', toggleDisplayForm);
   form.addEventListener('submit', stopSubmit);
   addClosingHandlers();
+  setDefaultScaleValue();
   removeFullPhotoClickHandler();
+  addScaleControlHandlers();
+  addPictureEffectsControl();
 }
 
 function toggleDisplayForm () {
