@@ -43,42 +43,40 @@ const DESCRIPTION_OPTIONS = [
 const PICTURES_NUMBER = 25;
 const MAX_COMMENT_ID = 1000;
 const MIN_COMMENT_COUNT = 2;
-const MAX_COMMENT_COUNT = 10;
+const MAX_COMMENT_COUNT = 20;
 const MIN_LIKES_COUNT = 15;
 const MAX_LIKES_COUNT = 200;
 const AVATAR_COUNT = 6;
 
 const commentsId = [];
 
-function generateCommentId () {
+const generateCommentId = () => {
   let newId = 0;
   do {
     newId = getRandomIntNumber(1, MAX_COMMENT_ID);
   } while (Array.prototype.indexOf(commentsId, newId) !== -1);
   commentsId.push(newId);
   return newId;
-}
+};
 
-function createComment () {
-  return {
-    id: generateCommentId(),
-    avatar: `img/avatar-${getRandomIntNumber(1, AVATAR_COUNT)}.svg`,
-    message: getRandomArrayElement(COMMENT_OPTIONS),
-    name: getRandomArrayElement(NAME_OPTIONS)
-  };
-}
+const createComment = () => ({
+  id: generateCommentId(),
+  avatar: `img/avatar-${getRandomIntNumber(1, AVATAR_COUNT)}.svg`,
+  message: getRandomArrayElement(COMMENT_OPTIONS),
+  name: getRandomArrayElement(NAME_OPTIONS)
+});
 
-function createPicture (index) {
+const createPicture = (index) => {
   const commentsCount = getRandomIntNumber(MIN_COMMENT_COUNT, MAX_COMMENT_COUNT);
   return {
-    id: index + 1,
+    id: index,
     url: `photos/${index + 1}.jpg`,
     description: getRandomArrayElement(DESCRIPTION_OPTIONS),
     likes: getRandomIntNumber(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
     comments: Array.from({length: commentsCount}, createComment)
   };
-}
+};
 
-const pictures = Array.from({length: PICTURES_NUMBER}, ( cur, i ) => createPicture(i));
+const pictures = Array.from({length: PICTURES_NUMBER}, (cur, i) => createPicture(i));
 
 export {pictures};

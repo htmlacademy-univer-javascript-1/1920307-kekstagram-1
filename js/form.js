@@ -11,6 +11,61 @@ const censelButton = form.querySelector('#upload-cancel');
 const hashTagsField = form.querySelector('.text__hashtags');
 const descriptionField = form.querySelector('.text__description');
 const validator = getFormValidator(form, hashTagsField, descriptionField);
+const submitButton = form.querySelector('.img-upload__submit');
+
+const toggleDisplayForm = () => {
+  field.classList.toggle('hidden');
+  body.classList.toggle('modal-open');
+};
+
+const checkValidateFields = () => {
+  if (!validator.validate()) {
+    submitButton.disabled = true;
+  } else {
+    submitButton.disabled = false;
+  }
+};
+
+const showForm = () => {
+  toggleDisplayForm();
+  uploadFile.removeEventListener('change', toggleDisplayForm);
+  descriptionField.addEventListener('input', checkValidateFields);
+  hashTagsField.addEventListener('input', checkValidateFields);
+  addClosingHandlers();
+  setDefaultScaleValue();
+  removeFullPhotoClickHandler();
+  addScaleControlHandlers();
+  addPictureEffectsControl();
+};
+
+const closeForm = () => {
+  toggleDisplayForm();
+  removeClosingHandlers();
+  uploadFile.addEventListener('change', showForm);
+  addFullPhotoClickHandler();
+  setDefaultScaleValue();
+  removePictureEffectsControl();
+  submitButton.disabled = false;
+  validator.reset();
+};
+
+const closeWithoutSubmit = () => {
+  closeForm();
+  form.reset();
+  uploadFile.value = '';
+};
+
+const escapeCloseForm = (evt) => {
+  if (evt.key === 'Escape') {
+    closeWithoutSubmit();
+  }
+};
+
+const stopClosing = (evt) => {
+  if (evt.key === 'Escape') {
+    evt.stopPropagation();
+  }
+};
 
 function addClosingHandlers () {
   censelButton.addEventListener('click', closeWithoutSubmit);
@@ -26,56 +81,6 @@ function removeClosingHandlers () {
   form.removeEventListener('submit', closeForm);
   hashTagsField.removeEventListener('keydown', stopClosing);
   descriptionField.removeEventListener('keydown', stopClosing);
-}
-
-function escapeCloseForm (evt) {
-  if (evt.key === 'Escape') {
-    closeWithoutSubmit();
-  }
-}
-
-function stopSubmit (evt) {
-  if (!validator.validate()) {
-    evt.preventDefault();
-  }
-}
-
-function stopClosing (evt) {
-  if (evt.key === 'Escape') {
-    evt.stopPropagation();
-  }
-}
-
-function closeWithoutSubmit () {
-  closeForm();
-  form.reset();
-  uploadFile.value = '';
-}
-
-function closeForm () {
-  toggleDisplayForm();
-  removeClosingHandlers();
-  uploadFile.addEventListener('change', showForm);
-  form.removeEventListener('submit', stopSubmit);
-  addFullPhotoClickHandler();
-  setDefaultScaleValue();
-  removePictureEffectsControl();
-}
-
-function showForm () {
-  toggleDisplayForm();
-  uploadFile.removeEventListener('change', toggleDisplayForm);
-  form.addEventListener('submit', stopSubmit);
-  addClosingHandlers();
-  setDefaultScaleValue();
-  removeFullPhotoClickHandler();
-  addScaleControlHandlers();
-  addPictureEffectsControl();
-}
-
-function toggleDisplayForm () {
-  field.classList.toggle('hidden');
-  body.classList.toggle('modal-open');
 }
 
 uploadFile.addEventListener('change', showForm);

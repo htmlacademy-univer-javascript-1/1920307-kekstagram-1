@@ -101,29 +101,32 @@ const previewImage = document.querySelector('.img-upload__preview img');
 const effectStrengthSlider = document.querySelector('.effect-level__slider');
 const effectStrengthField = document.querySelector('.effect-level__value');
 
-function createSlider () {
+const hideSlider = () => {
+  effectStrengthSlider.classList.add('hidden');
+};
+
+const createSlider = () => {
   noUiSlider.create(effectStrengthSlider, DEFAULT_EFFECTS_PARAMS);
   hideSlider();
-}
+};
 
-function getnameSelectedEffect () {
-  return document.querySelector('input[name="effect"]:checked').value;
-}
+const getNameSelectedEffect = () => document.querySelector('input[name="effect"]:checked').value;
 
-function hideSlider () {
-  effectStrengthSlider.classList.add('hidden');
-}
-
-function showSlider () {
+const showSlider = () => {
   effectStrengthSlider.classList.remove('hidden');
-}
+};
 
-function setUpdatedEffectStrengthField() {
+const setUpdatedEffectStrengthField = () => {
   effectStrengthField.value = effectStrengthSlider.noUiSlider.get();
-}
+};
 
-function updateSlider () {
-  const nameSelectedEffect = getnameSelectedEffect();
+const setEffectValue = () => {
+  const nameSelectedEffect = getNameSelectedEffect();
+  previewImage.style.filter = nameSelectedEffect === DEFAULT_EFFECT ? '' : `${EFFECTS_PARAMS[nameSelectedEffect].effect}(${effectStrengthField.value}${EFFECTS_PARAMS[nameSelectedEffect].unit})`;
+};
+
+const updateSlider = () => {
+  const nameSelectedEffect = getNameSelectedEffect();
   if(nameSelectedEffect !== DEFAULT_EFFECT) {
     effectStrengthSlider.noUiSlider.on('update', setUpdatedEffectStrengthField);
     effectStrengthSlider.noUiSlider.on('update', setEffectValue);
@@ -132,36 +135,31 @@ function updateSlider () {
   } else {
     hideSlider();
   }
-}
+};
 
-function updateImage () {
-  const nameSelectedEffect = getnameSelectedEffect();
+const updateImage = () => {
+  const nameSelectedEffect = getNameSelectedEffect();
   previewImage.classList.value = `effects__preview--${nameSelectedEffect}`;
   setEffectValue();
-}
+};
 
-function setEffectValue () {
-  const nameSelectedEffect = getnameSelectedEffect();
-  previewImage.style.filter = nameSelectedEffect === DEFAULT_EFFECT ? '' : `${EFFECTS_PARAMS[nameSelectedEffect].effect}(${effectStrengthField.value}${EFFECTS_PARAMS[nameSelectedEffect].unit})`;
-}
-
-function removePictureEffectsControl () {
+const removePictureEffectsControl = () => {
   effectStrengthSlider.noUiSlider.destroy();
   previewImage.style.filter = '';
   previewImage.classList.value = `effects__preview--${DEFAULT_EFFECT}`;
   effectStrengthField.value = DEFAULT_EFFECT;
-}
+};
 
-function updateSliderAndImage () {
+const updateSliderAndImage = () => {
   updateSlider();
   updateImage();
-}
+};
 
-function addPictureEffectsControl () {
+const addPictureEffectsControl = () => {
   createSlider();
   radioEffectsOptions.forEach((effect) => {
     effect.addEventListener('change', updateSliderAndImage);
   });
-}
+};
 
 export {addPictureEffectsControl, removePictureEffectsControl};
