@@ -1,7 +1,9 @@
 import {getFormValidator} from './form-validate.js';
-import {addFullPhotoClickHandler, removeFullPhotoClickHandler} from './fullversion.js';
 import {addScaleControlHandlers, setDefaultScaleValue} from './image-zoom.js';
-import {addPictureEffectsControl, removePictureEffectsControl} from './image-effects.js';
+import {addPictureEffectsControl, resetPictureEffectsControl} from './image-effects.js';
+import {sendData} from './api.js';
+import {isEscapeKey} from './util.js';
+import {openMessage} from './message.js';
 
 const body = document.querySelector('body');
 const form = body.querySelector('.img-upload__form');
@@ -10,72 +12,93 @@ const uploadFile = form.querySelector('#upload-file');
 const censelButton = form.querySelector('#upload-cancel');
 const hashTagsField = form.querySelector('.text__hashtags');
 const descriptionField = form.querySelector('.text__description');
+const submitButton = form.querySelector('.img-upload__submit');
 const validator = getFormValidator(form, hashTagsField, descriptionField);
 
-function addClosingHandlers () {
-  censelButton.addEventListener('click', closeWithoutSubmit);
-  document.addEventListener('keydown', escapeCloseForm);
-  form.addEventListener('submit', closeForm);
-  hashTagsField.addEventListener('keydown', stopClosing);
-  descriptionField.addEventListener('keydown', stopClosing);
-}
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+};
 
-function removeClosingHandlers () {
-  censelButton.removeEventListener('click', closeWithoutSubmit);
-  document.removeEventListener('keydown', escapeCloseForm);
-  form.removeEventListener('submit', closeForm);
-  hashTagsField.removeEventListener('keydown', stopClosing);
-  descriptionField.removeEventListener('keydown', stopClosing);
-}
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+};
 
-function escapeCloseForm (evt) {
-  if (evt.key === 'Escape') {
-    closeWithoutSubmit();
-  }
-}
-
-function stopSubmit (evt) {
+const fieldInputHandler = () => {
   if (!validator.validate()) {
-    evt.preventDefault();
+    blockSubmitButton();
+  } else {
+    unblockSubmitButton();
   }
-}
+};
 
-function stopClosing (evt) {
-  if (evt.key === 'Escape') {
-    evt.stopPropagation();
-  }
-}
-
-function closeWithoutSubmit () {
-  closeForm();
+const resetForm = () => {
+  resetPictureEffectsControl();
+  submitButton.disabled = false;
+  validator.reset();
   form.reset();
   uploadFile.value = '';
-}
-
-function closeForm () {
-  toggleDisplayForm();
-  removeClosingHandlers();
-  uploadFile.addEventListener('change', showForm);
-  form.removeEventListener('submit', stopSubmit);
-  addFullPhotoClickHandler();
   setDefaultScaleValue();
-  removePictureEffectsControl();
-}
+};
 
-function showForm () {
-  toggleDisplayForm();
-  uploadFile.removeEventListener('change', toggleDisplayForm);
-  form.addEventListener('submit', stopSubmit);
-  addClosingHandlers();
-  setDefaultScaleValue();
-  removeFullPhotoClickHandler();
-  addScaleControlHandlers();
+const closeForm = () => {
+  field.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', documentKeydownHandler);
+  resetForm();
+};
+
+const showForm = () => {
+  field.classList.remove('hidden');
+  body.classList.add('modal-open');
+  document.addEventListener('keydown', documentKeydownHandler);
   addPictureEffectsControl();
+};
+
+function documentKeydownHandler (evt) {
+  if (isEscapeKey(evt)) {
+    closeForm();
+  }
 }
 
-function toggleDisplayForm () {
-  field.classList.toggle('hidden');
-  body.classList.toggle('modal-open');
-}
+const censelButtonClickHandler = () => closeForm();
 
-uploadFile.addEventListener('change', showForm);
+const fileChangeHandler = () => showForm();
+
+const fieldKeydownHandler = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.stopPropagation();
+  }
+};
+
+const addClosingHandlers = () => {
+  censelButton.addEventListener('click', censelButtonClickHandler);
+  hashTagsField.addEventListener('keydown', fieldKeydownHandler);
+  descriptionField.addEventListener('keydown', fieldKeydownHandler);
+};
+
+const initializeForm = () => {
+  uploadFile.addEventListener('change', fileChangeHandler);
+  descriptionField.addEventListener('input', fieldInputHandler);
+  hashTagsField.addEventListener('input', fieldInputHandler);
+  addClosingHandlers();
+  addScaleControlHandlers();
+
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    blockSubmitButton();
+    sendData(
+      () => {
+        closeForm();
+        unblockSubmitButton();
+        openMessage(true);
+      },
+      () => {
+        openMessage(false);
+        unblockSubmitButton();
+      },
+      new FormData(evt.target)
+    );
+  });
+};
+
+export {initializeForm};

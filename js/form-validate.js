@@ -5,23 +5,15 @@ const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAGS_COUNT = 5;
 const HASHTAG_REG = /^#[A-za-zА-Яа-яЁё\d]{1,19}$/;
 
-function validateHashtagsFormat (hashtagString) {
-  return hashtagString === '' ? true : hashtagString.split(' ').every((hashtag) => HASHTAG_REG.test(hashtag));
-}
+const validateHashtagsFormat = (hashtagString) => hashtagString === '' ? true : hashtagString.split(' ').every((hashtag) => HASHTAG_REG.test(hashtag));
 
-function validateUniquenessHashtag (hashtagString) {
-  return checkElementUniqueness(hashtagString.toLowerCase().split(' '));
-}
+const validateUniquenessHashtag = (hashtagString) => checkElementUniqueness(hashtagString.toLowerCase().split(' '));
 
-function validateHashtagsCount (hashtagString) {
-  return checkLength(hashtagString.split(' '), MAX_HASHTAGS_COUNT);
-}
+const validateHashtagsCount = (hashtagString) => checkLength(hashtagString.split(' '), MAX_HASHTAGS_COUNT);
 
-function validateDescriptionLength (description) {
-  return checkLength(description, MAX_DESCRIPTION_LENGTH);
-}
+const validateDescriptionLength = (description) => checkLength(description, MAX_DESCRIPTION_LENGTH);
 
-function getFormValidator (form, hashtagsField, descriptionField) {
+const getFormValidator = (form, hashtagsField, descriptionField) => {
   const pristine = new Pristine(form, {
     classTo: 'img-upload__field-wrapper',
     errorTextParent: 'img-upload__field-wrapper',
@@ -31,7 +23,7 @@ function getFormValidator (form, hashtagsField, descriptionField) {
     hashtagsField,
     validateHashtagsFormat,
     `Хэш-тэги должны быть вида #hashtag, не длиннее ${MAX_HASHTAG_LENGTH} символов, разделены пробелами и не содержать спец. символы`,
-    3
+    1
   );
   pristine.addValidator(
     hashtagsField,
@@ -43,7 +35,7 @@ function getFormValidator (form, hashtagsField, descriptionField) {
     hashtagsField,
     validateHashtagsCount,
     `Нельзя указать больше ${MAX_HASHTAGS_COUNT} хэш-тегов`,
-    1
+    3
   );
   pristine.addValidator(
     descriptionField,
@@ -51,6 +43,6 @@ function getFormValidator (form, hashtagsField, descriptionField) {
     `Максимальная длина комментария ${MAX_DESCRIPTION_LENGTH} символов`
   );
   return pristine;
-}
+};
 
 export {getFormValidator};

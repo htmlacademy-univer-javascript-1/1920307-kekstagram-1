@@ -1,23 +1,18 @@
-function getRandomIntNumber (min, max) {
+const getRandomIntNumber = (min, max) => {
   if (min > max) {
     const intermediary = min;
     min = max;
     max = intermediary;
   }
   return Math.floor(Math.random() * (max + 1 - min)) + min;
-}
+};
 
-function getRandomArrayElement (elements) {
-  return elements[getRandomIntNumber(0, elements.length - 1)];
-}
+const isEscapeKey = (evt) => evt.key === 'Escape';
 
-function checkLength (array, maxLenght) {
-  return array.length <= maxLenght;
-}
+const getRandomArrayElement = (elements) => elements[getRandomIntNumber(0, elements.length - 1)]; //нужен ли
 
-function checkElementUniqueness (array) {
-  return new Set(array).size === array.length;
-}
+const checkLength = (array, maxLenght) => array.length <= maxLenght;
 
-export {getRandomIntNumber, getRandomArrayElement, checkLength, checkElementUniqueness};
+const checkElementUniqueness = (array) => new Set(array).size === array.length;
 
+export {getRandomArrayElement, checkLength, checkElementUniqueness, isEscapeKey};

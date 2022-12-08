@@ -1,48 +1,28 @@
-import {pictures} from './data.js';
+import {isEscapeKey} from './util.js';
 
 const DEFAULT_COMMENTS_COUNT = 5;
 const UPLOAD_COMMENTS_COUNT = 5;
 
-const commentSample = document.querySelector('.social__comment');
-const closeButton = document.querySelector('.big-picture__cancel');
-const containerPhotos = document.querySelector('.pictures');
-const bigPicture = document.querySelector('.big-picture');
+const body = document.querySelector('body');
+const photoContainer = body.querySelector('.pictures');
+const bigPicture = body.querySelector('.big-picture');
+const commentSample = bigPicture.querySelector('.social__comment');
+const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const commentsCountInfo = bigPicture.querySelector('.social__comment-count');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
 
-const img = bigPicture.querySelector('.big-picture__img').querySelector('img');
+const img = bigPicture.querySelector('.big-picture__img img');
 const likes = bigPicture.querySelector('.likes-count');
 const commentsContainer = bigPicture.querySelector('.social__comments');
 const description = bigPicture.querySelector('.social__caption');
 
 let currId;
+let pictures;
 
-function addFullPhotoClickHandler () {
-  containerPhotos.addEventListener('click', showFullVersion);
-}
+const getCurrentCommentsCount = () => commentsContainer.children.length;
 
-function removeFullPhotoClickHandler () {
-  containerPhotos.removeEventListener('click', showFullVersion);
-}
-
-function showFullVersion (evt) {
-  if (evt.target.closest('.picture')) {
-    currId = evt.target.parentNode.id;
-    img.src = pictures[currId].url;
-    likes.textContent = pictures[currId].likes;
-    description.textContent = pictures[currId].description;
-    addComments(pictures[currId].comments.slice(0, DEFAULT_COMMENTS_COUNT));
-
-    commentsLoader.addEventListener('click', loadMoreComments);
-
-    toggleDisplayFullVersion();
-    addClosingHandlers();
-    containerPhotos.removeEventListener('click', showFullVersion);
-  }
-}
-
-function updateCommentsCountInfo () {
-  const currentCommentsCount = commentsContainer.children.length;
+const updateCommentsCountInfo = () => {
+  const currentCommentsCount = getCurrentCommentsCount();
   if (currentCommentsCount === pictures[currId].comments.length) {
     commentsLoader.classList.add('hidden');
   } else {
@@ -50,14 +30,9 @@ function updateCommentsCountInfo () {
   }
   commentsCountInfo.innerHTML = '';
   commentsCountInfo.insertAdjacentHTML('beforeend', `${currentCommentsCount} из <span class="comments-count">${pictures[currId].comments.length}</span> комментариев`);
-}
+};
 
-function loadMoreComments () {
-  const currentCommentsCount = commentsContainer.children.length;
-  addComments(pictures[currId].comments.slice(0, currentCommentsCount + UPLOAD_COMMENTS_COUNT));
-}
-
-function addComments (commentsInfo) {
+const renderComments = (commentsInfo) => {
   commentsContainer.innerHTML = '';
   commentsInfo.forEach((commentInfo) => {
     const newComment = commentSample.cloneNode(true);
@@ -66,34 +41,52 @@ function addComments (commentsInfo) {
     commentsContainer.append(newComment);
   });
   updateCommentsCountInfo();
-}
+};
 
-function addClosingHandlers () {
-  closeButton.addEventListener('click', closeFullVersion);
-  document.addEventListener('keydown', escapeCloseFullVersion);
-}
+const commentsLoaderClickHandler = () => {
+  const currentCommentsCount = getCurrentCommentsCount();
+  renderComments(pictures[currId].comments.slice(0, currentCommentsCount + UPLOAD_COMMENTS_COUNT));
+};
 
-function removeClosingHandlers () {
-  closeButton.removeEventListener('click', closeFullVersion);
-  document.removeEventListener('keydown', escapeCloseFullVersion);
-}
+const toggleDisplayFullVersion = () => {
+  bigPicture.classList.toggle('hidden');
+  body.classList.toggle('modal-open');
+};
 
-function escapeCloseFullVersion (evt) {
-  if (evt.key === 'Escape') {
+const documentKeydownHandler = (evt) => {
+  if (isEscapeKey(evt)) {
     closeFullVersion();
   }
-}
+};
+
+const closeButtonClickHandler = () => {
+  closeFullVersion();
+};
+
+const photoContainerClickHandler = (evt) => {
+  if (evt.target.closest('.picture')) {
+    currId = evt.target.parentNode.id;
+    const currPictureInfo = pictures.find((item) => item.id === Number(currId));
+    img.src = currPictureInfo.url;
+    likes.textContent = currPictureInfo.likes;
+    description.textContent = currPictureInfo.description;
+    renderComments(currPictureInfo.comments.slice(0, DEFAULT_COMMENTS_COUNT));
+
+    document.addEventListener('keydown', documentKeydownHandler);
+    toggleDisplayFullVersion();
+  }
+};
 
 function closeFullVersion () {
   toggleDisplayFullVersion();
-  removeClosingHandlers();
-  addFullPhotoClickHandler();
-  commentsLoader.removeEventListener('click', loadMoreComments);
+  document.removeEventListener('keydown', documentKeydownHandler);
 }
 
-function toggleDisplayFullVersion () {
-  bigPicture.classList.toggle('hidden');
-  document.querySelector('body').classList.toggle('modal-open');
-}
+const initializeFullVersionRender = (picturesInfo) => {
+  pictures = picturesInfo;
+  photoContainer.addEventListener('click', photoContainerClickHandler);
+  commentsLoader.addEventListener('click', commentsLoaderClickHandler);
+  closeButton.addEventListener('click', closeButtonClickHandler);
+};
 
-export {addFullPhotoClickHandler, removeFullPhotoClickHandler};
+export {initializeFullVersionRender};

@@ -98,70 +98,65 @@ const DEFAULT_EFFECTS_PARAMS = {
 
 const radioEffectsOptions = document.querySelectorAll('.effects__radio');
 const previewImage = document.querySelector('.img-upload__preview img');
-const effectStrengthSlider = document.querySelector('.effect-level__slider');
+const effectSlider = document.querySelector('.effect-level__slider');
 const effectStrengthField = document.querySelector('.effect-level__value');
 
-function createSlider () {
-  noUiSlider.create(effectStrengthSlider, DEFAULT_EFFECTS_PARAMS);
-  hideSlider();
-}
+const hideSlider = () => effectSlider.classList.add('hidden');
 
-function getnameSelectedEffect () {
-  return document.querySelector('input[name="effect"]:checked').value;
-}
+const createSlider = () => noUiSlider.create(effectSlider, DEFAULT_EFFECTS_PARAMS);
 
-function hideSlider () {
-  effectStrengthSlider.classList.add('hidden');
-}
+const getNameSelectedEffect = () => document.querySelector('input[name="effect"]:checked').value;
 
-function showSlider () {
-  effectStrengthSlider.classList.remove('hidden');
-}
+const showSlider = () => effectSlider.classList.remove('hidden');
 
-function setUpdatedEffectStrengthField() {
-  effectStrengthField.value = effectStrengthSlider.noUiSlider.get();
-}
+const updateEffectValue = () => {
+  const nameSelectedEffect = getNameSelectedEffect();
+  previewImage.style.filter = nameSelectedEffect === DEFAULT_EFFECT ? '' : `${EFFECTS_PARAMS[nameSelectedEffect].effect}(${effectStrengthField.value}${EFFECTS_PARAMS[nameSelectedEffect].unit})`;
+};
 
-function updateSlider () {
-  const nameSelectedEffect = getnameSelectedEffect();
+const effectSliderUpdateHandler = () => {
+  effectStrengthField.value = effectSlider.noUiSlider.get();
+  updateEffectValue();
+};
+
+const updateSlider = () => {
+  const nameSelectedEffect = getNameSelectedEffect();
   if(nameSelectedEffect !== DEFAULT_EFFECT) {
-    effectStrengthSlider.noUiSlider.on('update', setUpdatedEffectStrengthField);
-    effectStrengthSlider.noUiSlider.on('update', setEffectValue);
-    effectStrengthSlider.noUiSlider.updateOptions(EFFECTS_PARAMS[nameSelectedEffect].sliderOptions);
+    effectSlider.noUiSlider.on('update', effectSliderUpdateHandler);
+    effectSlider.noUiSlider.updateOptions(EFFECTS_PARAMS[nameSelectedEffect].sliderOptions);
     showSlider();
   } else {
     hideSlider();
   }
-}
+};
 
-function updateImage () {
-  const nameSelectedEffect = getnameSelectedEffect();
+const updateImage = () => {
+  const nameSelectedEffect = getNameSelectedEffect();
   previewImage.classList.value = `effects__preview--${nameSelectedEffect}`;
-  setEffectValue();
-}
+  updateEffectValue();
+};
 
-function setEffectValue () {
-  const nameSelectedEffect = getnameSelectedEffect();
-  previewImage.style.filter = nameSelectedEffect === DEFAULT_EFFECT ? '' : `${EFFECTS_PARAMS[nameSelectedEffect].effect}(${effectStrengthField.value}${EFFECTS_PARAMS[nameSelectedEffect].unit})`;
-}
+const effectOptionChangeHandler = () => {
+  updateSlider();
+  updateImage();
+};
 
-function removePictureEffectsControl () {
-  effectStrengthSlider.noUiSlider.destroy();
+const resetPictureEffectsControl = () => {
+  effectSlider.noUiSlider.destroy();
   previewImage.style.filter = '';
   previewImage.classList.value = `effects__preview--${DEFAULT_EFFECT}`;
   effectStrengthField.value = DEFAULT_EFFECT;
-}
-
-function updateSliderAndImage () {
-  updateSlider();
-  updateImage();
-}
-
-function addPictureEffectsControl () {
-  createSlider();
-  radioEffectsOptions.forEach((effect) => {
-    effect.addEventListener('change', updateSliderAndImage);
+  radioEffectsOptions.forEach((effectOption) => {
+    effectOption.removeEventListener('change', effectOptionChangeHandler);
   });
-}
+};
 
-export {addPictureEffectsControl, removePictureEffectsControl};
+const addPictureEffectsControl = () => {
+  createSlider();
+  hideSlider();
+  radioEffectsOptions.forEach((effectOption) => {
+    effectOption.addEventListener('change', effectOptionChangeHandler);
+  });
+};
+
+export {addPictureEffectsControl, resetPictureEffectsControl};
