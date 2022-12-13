@@ -36,7 +36,7 @@ const setLargerScaleValue = () => {
 const addScaleControlHandlers = () => {
   setDefaultScaleValue();
   zoomMinusBtn.addEventListener('click', setLowerScaleValue);
-  zoomPlusBtn.addEventListener('click', setLargerScaleValue);  //не множатся ли
+  zoomPlusBtn.addEventListener('click', setLargerScaleValue);
 };
 
 export {addScaleControlHandlers, setDefaultScaleValue};
