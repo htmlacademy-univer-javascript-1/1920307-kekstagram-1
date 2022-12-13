@@ -5,6 +5,8 @@ import {sendData} from './api.js';
 import {isEscapeKey} from './util.js';
 import {openMessage} from './message.js';
 
+const POSSIBLE_FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const body = document.querySelector('body');
 const form = body.querySelector('.img-upload__form');
 const field = form.querySelector('.img-upload__overlay');
@@ -13,6 +15,7 @@ const censelButton = form.querySelector('#upload-cancel');
 const hashTagsField = form.querySelector('.text__hashtags');
 const descriptionField = form.querySelector('.text__description');
 const submitButton = form.querySelector('.img-upload__submit');
+const photoPreview = document.querySelector('.img-upload__preview img');
 const validator = getFormValidator(form, hashTagsField, descriptionField);
 
 const blockSubmitButton = () => {
@@ -62,7 +65,15 @@ function documentKeydownHandler (evt) {
 
 const censelButtonClickHandler = () => closeForm();
 
-const fileChangeHandler = () => showForm();
+const fileChangeHandler = () => {
+  showForm();
+  const filePhoto = uploadFile.files[0];
+  const filePhotoName = filePhoto.name.toLowerCase();
+  const matches = POSSIBLE_FILE_TYPES.some((it) => filePhotoName.endsWith(it));
+  if (matches) {
+    photoPreview.src = URL.createObjectURL(filePhoto);
+  }
+};
 
 const fieldKeydownHandler = (evt) => {
   if (isEscapeKey(evt)) {
