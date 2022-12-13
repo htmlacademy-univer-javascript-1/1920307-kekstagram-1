@@ -9,7 +9,7 @@ const getRandomIntNumber = (min, max) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const getRandomArrayElement = (elements) => elements[getRandomIntNumber(0, elements.length - 1)]; //нужен ли
+const getRandomArrayElement = (elements) => elements[getRandomIntNumber(0, elements.length - 1)];
 
 const checkLength = (array, maxLenght) => array.length <= maxLenght;
 
