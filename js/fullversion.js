@@ -17,19 +17,19 @@ const commentsContainer = bigPicture.querySelector('.social__comments');
 const description = bigPicture.querySelector('.social__caption');
 
 let currId;
-let pictures;
+let photoData;
 
 const getCurrentCommentsCount = () => commentsContainer.children.length;
 
 const updateCommentsCountInfo = () => {
   const currentCommentsCount = getCurrentCommentsCount();
-  if (currentCommentsCount === pictures[currId].comments.length) {
+  if (currentCommentsCount === photoData[currId].comments.length) {
     commentsLoader.classList.add('hidden');
   } else {
     commentsLoader.classList.remove('hidden');
   }
   commentsCountInfo.innerHTML = '';
-  commentsCountInfo.insertAdjacentHTML('beforeend', `${currentCommentsCount} из <span class="comments-count">${pictures[currId].comments.length}</span> комментариев`);
+  commentsCountInfo.insertAdjacentHTML('beforeend', `${currentCommentsCount} из <span class="comments-count">${photoData[currId].comments.length}</span> комментариев`);
 };
 
 const renderComments = (commentsInfo) => {
@@ -45,7 +45,7 @@ const renderComments = (commentsInfo) => {
 
 const commentsLoaderClickHandler = () => {
   const currentCommentsCount = getCurrentCommentsCount();
-  renderComments(pictures[currId].comments.slice(0, currentCommentsCount + UPLOAD_COMMENTS_COUNT));
+  renderComments(photoData[currId].comments.slice(0, currentCommentsCount + UPLOAD_COMMENTS_COUNT));
 };
 
 const toggleDisplayFullVersion = () => {
@@ -66,7 +66,7 @@ const closeButtonClickHandler = () => {
 const photoContainerClickHandler = (evt) => {
   if (evt.target.closest('.picture')) {
     currId = evt.target.parentNode.id;
-    const currPictureInfo = pictures.find((item) => item.id === Number(currId));
+    const currPictureInfo = photoData.find((item) => item.id === Number(currId));
     img.src = currPictureInfo.url;
     likes.textContent = currPictureInfo.likes;
     description.textContent = currPictureInfo.description;
@@ -83,7 +83,7 @@ function closeFullVersion () {
 }
 
 const initializeFullVersionRender = (picturesInfo) => {
-  pictures = picturesInfo;
+  photoData = picturesInfo;
   photoContainer.addEventListener('click', photoContainerClickHandler);
   commentsLoader.addEventListener('click', commentsLoaderClickHandler);
   closeButton.addEventListener('click', closeButtonClickHandler);

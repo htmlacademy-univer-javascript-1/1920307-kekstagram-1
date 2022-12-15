@@ -1,6 +1,6 @@
 import {isEscapeKey} from './util.js';
 
-const ALERT_SHOW_TIME = 5000;
+const ALERT_SHOW_TIME = 5000; //вынести в main?
 
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
