@@ -37,12 +37,15 @@ const getSortedPhotoData = () => photoData.slice().sort((firstPhoto, secondPhoto
 const filterPhotos = () => {
   deletePhotos();
   const selectedFilterName = filterElement.querySelector('.img-filters__button--active').id;
-  if (selectedFilterName === RANDOM_FILTER_NAME) { //использовать тернарник?
-    renderPhotos(getRandomizePhotoData());
-  } else if (selectedFilterName === DISCUSSED_FILTER_NAME) {
-    renderPhotos(getSortedPhotoData());
-  } else {
-    renderPhotos(photoData);
+  switch (selectedFilterName) {
+    case RANDOM_FILTER_NAME:
+      renderPhotos(getRandomizePhotoData());
+      break;
+    case DISCUSSED_FILTER_NAME:
+      renderPhotos(getSortedPhotoData());
+      break;
+    default:
+      renderPhotos(photoData);
   }
 };
 
