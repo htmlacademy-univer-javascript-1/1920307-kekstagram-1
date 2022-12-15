@@ -22,9 +22,9 @@ const getPhotoFragment = (pictureInfo) => {
   return newPhotoFragment;
 };
 
-const renderPhotos = (picturesInfo) => {
+const renderPhotos = (pictureData) => {
   const fragment = document.createDocumentFragment();
-  picturesInfo.forEach((pictureInfo) => {
+  pictureData.forEach((pictureInfo) => {
     fragment.append(getPhotoFragment(pictureInfo));
   });
   containerPhotos.appendChild(fragment);
@@ -37,18 +37,21 @@ const getSortedPhotoData = () => photoData.slice().sort((firstPhoto, secondPhoto
 const filterPhotos = () => {
   deletePhotos();
   const selectedFilterName = filterElement.querySelector('.img-filters__button--active').id;
-  if (selectedFilterName === RANDOM_FILTER_NAME) { //использовать тернарник?
-    renderPhotos(getRandomizePhotoData());
-  } else if (selectedFilterName === DISCUSSED_FILTER_NAME) {
-    renderPhotos(getSortedPhotoData());
-  } else {
-    renderPhotos(photoData);
+  switch (selectedFilterName) {
+    case RANDOM_FILTER_NAME:
+      renderPhotos(getRandomizePhotoData());
+      break;
+    case DISCUSSED_FILTER_NAME:
+      renderPhotos(getSortedPhotoData());
+      break;
+    default:
+      renderPhotos(photoData);
   }
 };
 
-const initializePhotos = (picturesInfo) => {
-  photoData = picturesInfo;
-  renderPhotos(picturesInfo);
+const initializePhotos = (picturesData) => {
+  photoData = picturesData;
+  renderPhotos(picturesData);
 };
 
-export{initializePhotos, filterPhotos};
+export { initializePhotos, filterPhotos };

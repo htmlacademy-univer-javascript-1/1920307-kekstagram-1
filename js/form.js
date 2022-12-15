@@ -112,4 +112,4 @@ const initializeForm = () => {
   });
 };
 
-export {initializeForm};
+export { initializeForm };

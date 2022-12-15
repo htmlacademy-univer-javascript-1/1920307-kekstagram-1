@@ -45,4 +45,4 @@ const getFormValidator = (form, hashtagsField, descriptionField) => {
   return pristine;
 };
 
-export {getFormValidator};
+export { getFormValidator };

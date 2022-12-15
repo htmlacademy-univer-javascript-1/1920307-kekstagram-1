@@ -69,4 +69,4 @@ const openMessage = (isSuccess) => {
   document.addEventListener('click', documentClickHandler);
 };
 
-export {showDownloadErrorMessage, openMessage};
+export { showDownloadErrorMessage, openMessage };

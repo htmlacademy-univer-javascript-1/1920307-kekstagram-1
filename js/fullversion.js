@@ -32,9 +32,9 @@ const updateCommentsCountInfo = () => {
   commentsCountInfo.insertAdjacentHTML('beforeend', `${currentCommentsCount} из <span class="comments-count">${photoData[currId].comments.length}</span> комментариев`);
 };
 
-const renderComments = (commentsInfo) => {
+const renderComments = (commentData) => {
   commentsContainer.innerHTML = '';
-  commentsInfo.forEach((commentInfo) => {
+  commentData.forEach((commentInfo) => {
     const newComment = commentSample.cloneNode(true);
     newComment.querySelector('.social__picture').src = commentInfo.avatar;
     newComment.querySelector('.social__text').textContent = commentInfo.message;
@@ -82,11 +82,11 @@ function closeFullVersion () {
   document.removeEventListener('keydown', documentKeydownHandler);
 }
 
-const initializeFullVersionRender = (picturesInfo) => {
-  photoData = picturesInfo;
+const initializeFullVersionRender = (pictureData) => {
+  photoData = pictureData;
   photoContainer.addEventListener('click', photoContainerClickHandler);
   commentsLoader.addEventListener('click', commentsLoaderClickHandler);
   closeButton.addEventListener('click', closeButtonClickHandler);
 };
 
-export {initializeFullVersionRender};
+export { initializeFullVersionRender };

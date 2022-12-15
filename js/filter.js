@@ -1,18 +1,20 @@
-const filterElement = document.querySelector('.img-filters');
-const filterButtons = document.querySelectorAll('.img-filters__button');
+const filterContainer = document.querySelector('.img-filters');
 
 const showFilterControls = () => {
-  filterElement.classList.remove('img-filters--inactive');
+  filterContainer.classList.remove('img-filters--inactive');
 };
 
-const addFilterButtonsHandlers = (cb) => {
-  filterButtons.forEach((filterButton) => {
-    filterButton.addEventListener('click', (evt) => {
-      filterElement.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
-      evt.target.classList.add('img-filters__button--active'); //this?
+const initializeFilterControls = (cb) => {
+  const filterContainerClickHandler = (evt) => {
+    if (evt.target.closest('.img-filters__button')) {
+      filterContainer.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
+      evt.target.classList.add('img-filters__button--active');
       cb();
-    });
-  });
+    }
+  };
+
+  showFilterControls();
+  filterContainer.addEventListener('click', filterContainerClickHandler);
 };
 
-export {showFilterControls, addFilterButtonsHandlers};
+export { initializeFilterControls };

@@ -12,4 +12,4 @@ const debounce = (callback, timeoutDelay) => {
   };
 };
 
-export {checkLength, checkElementUniqueness, isEscapeKey, debounce};
+export { checkLength, checkElementUniqueness, isEscapeKey, debounce };
