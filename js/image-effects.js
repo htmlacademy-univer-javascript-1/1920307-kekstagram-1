@@ -159,4 +159,4 @@ const addPictureEffectsControl = () => {
   });
 };
 
-export {addPictureEffectsControl, resetPictureEffectsControl};
+export { addPictureEffectsControl, resetPictureEffectsControl };

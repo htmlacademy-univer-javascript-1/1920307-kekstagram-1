@@ -1,10 +1,10 @@
-const sample = document.querySelector('#picture').content.querySelector('.picture');
-const containerPhotos = document.querySelector('.pictures');
-const filterElement = document.querySelector('.img-filters');
-
 const RANDOM_FILTER_NAME = 'filter-random';
 const DISCUSSED_FILTER_NAME = 'filter-discussed';
 const RANDOM_PHOTO_COUNT = 10;
+
+const sample = document.querySelector('#picture').content.querySelector('.picture');
+const containerPhotos = document.querySelector('.pictures');
+const filterElement = document.querySelector('.img-filters');
 
 let photoData;
 
@@ -22,9 +22,9 @@ const getPhotoFragment = (pictureInfo) => {
   return newPhotoFragment;
 };
 
-const renderPhotos = (picturesInfo) => {
+const renderPhotos = (pictureData) => {
   const fragment = document.createDocumentFragment();
-  picturesInfo.forEach((pictureInfo) => {
+  pictureData.forEach((pictureInfo) => {
     fragment.append(getPhotoFragment(pictureInfo));
   });
   containerPhotos.appendChild(fragment);
@@ -49,9 +49,9 @@ const filterPhotos = () => {
   }
 };
 
-const initializePhotos = (picturesInfo) => {
-  photoData = picturesInfo;
-  renderPhotos(picturesInfo);
+const initializePhotos = (picturesData) => {
+  photoData = picturesData;
+  renderPhotos(picturesData);
 };
 
-export{initializePhotos, filterPhotos};
+export { initializePhotos, filterPhotos };

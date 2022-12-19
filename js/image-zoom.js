@@ -39,4 +39,4 @@ const addScaleControlHandlers = () => {
   zoomPlusBtn.addEventListener('click', setLargerScaleValue);
 };
 
-export {addScaleControlHandlers, setDefaultScaleValue};
+export { addScaleControlHandlers, setDefaultScaleValue };
