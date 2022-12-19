@@ -1,9 +1,11 @@
 import {isEscapeKey} from './util.js';
 
-const ALERT_SHOW_TIME = 5000; //вынести в main?
+const ALERT_SHOW_TIME = 5000;
 
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+
+let closingMessageCallback;
 
 const showDownloadErrorMessage = (message) => {
   const alertContainer = document.createElement('div');
@@ -34,6 +36,7 @@ const getMessageElement = () => document.querySelector('.success, .error');
 const closeMessage = () => {
   getMessageElement().remove();
   removeClosingHandlers();
+  closingMessageCallback();
 };
 
 const documentKeydownHandler = (evt) => {
@@ -57,7 +60,8 @@ function removeClosingHandlers () {
 
 const messageButtonClickHandler = () => closeMessage();
 
-const openMessage = (isSuccess) => {
+const openMessage = (isSuccess, cb) => {
+  closingMessageCallback = cb;
   const message = isSuccess ? successMessageTemplate.cloneNode(true) : errorMessageTemplate.cloneNode(true);
   const typeMessage = isSuccess ? 'success' : 'error';
   const closeMessageButton = message.querySelector(`.${typeMessage}__button`);

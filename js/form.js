@@ -50,10 +50,14 @@ const closeForm = () => {
   resetForm();
 };
 
+const addDocumentKeydownHandler = () => {
+  document.addEventListener('keydown', documentKeydownHandler);
+};
+
 const showForm = () => {
   field.classList.remove('hidden');
   body.classList.add('modal-open');
-  document.addEventListener('keydown', documentKeydownHandler);
+  addDocumentKeydownHandler();
   addPictureEffectsControl();
 };
 
@@ -104,7 +108,8 @@ const initializeForm = () => {
         openMessage(true);
       },
       () => {
-        openMessage(false);
+        document.removeEventListener('keydown', documentKeydownHandler);
+        openMessage(false, addDocumentKeydownHandler);
         unblockSubmitButton();
       },
       new FormData(evt.target)
