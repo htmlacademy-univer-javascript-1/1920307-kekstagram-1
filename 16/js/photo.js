@@ -1,10 +1,10 @@
-const sample = document.querySelector('#picture').content.querySelector('.picture');
-const containerPhotos = document.querySelector('.pictures');
-const filterElement = document.querySelector('.img-filters');
-
 const RANDOM_FILTER_NAME = 'filter-random';
 const DISCUSSED_FILTER_NAME = 'filter-discussed';
 const RANDOM_PHOTO_COUNT = 10;
+
+const sample = document.querySelector('#picture').content.querySelector('.picture');
+const containerPhotos = document.querySelector('.pictures');
+const filterElement = document.querySelector('.img-filters');
 
 let photoData;
 
